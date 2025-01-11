@@ -1,0 +1,32 @@
+const fs = require('fs');
+const path = require('path');
+
+// Directory containing the files
+const directoryPath = path.resolve(__dirname, 'downloads');
+
+// Function to replace underscores with spaces in file names
+const replaceUnderscoresWithSpaces = (directory) => {
+    try {
+        // Read all files in the directory
+        const files = fs.readdirSync(directory);
+
+        files.forEach(file => {
+            // Check if the file name contains underscores
+            if (file.includes('_')) {
+                const oldPath = path.join(directory, file);
+                const newPath = path.join(directory, file.replace(/_/g, ' '));
+
+                // Rename the file
+                fs.renameSync(oldPath, newPath);
+                console.log(`Renamed: "${file}" -> "${path.basename(newPath)}"`);
+            }
+        });
+
+        console.log('All matching files have been renamed.');
+    } catch (error) {
+        console.error('Error processing files:', error.message);
+    }
+};
+
+// Run the program
+replaceUnderscoresWithSpaces(directoryPath);
