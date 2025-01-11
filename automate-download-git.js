@@ -1,3 +1,7 @@
+//Version 1.1 Major Update with Renaming and Bug Fixes. Now downloads only new files by checking progress.json and skips empty lessons instead of crashing.
+//Progress.json contains lesson names like array ["Lesson 1","Lesson 2", "etc"]
+//Before downloading from partially downloaded course, make sure to update progress.json with names of pre-downloaded lessons.
+
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
