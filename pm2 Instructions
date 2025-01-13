@@ -1,0 +1,104 @@
+PM2 Instructions
+
+PM2 is a process manager for Node.js applications that allows you to manage and keep your apps alive forever.
+
+1. Install PM2
+To install PM2 globally, run the following command:
+
+bash
+npm install pm2 -g
+
+
+2. Start an Application
+To start an application with PM2, use:
+
+bash
+pm2 start app.js
+Replace app.js with the entry point of your Node.js application.
+
+
+3. Start Multiple Applications
+To start multiple applications with specific names:
+
+bash
+pm2 start app1.js --name "app1"
+pm2 start app2.js --name "app2"
+
+
+4. List All Running Applications
+To list all the processes currently managed by PM2:
+
+bash
+pm2 list
+
+
+5. Stop an Application
+To stop an application, use the name or ID:
+
+bash
+pm2 stop app1
+# or using the process ID
+pm2 stop 0
+
+
+6. Restart an Application
+To restart an application:
+
+bash
+pm2 restart app1
+# or using the process ID
+pm2 restart 0
+
+
+7. Delete an Application
+To delete an application from PM2:
+
+bash
+pm2 delete app1
+# or using the process ID
+pm2 delete 0
+
+
+8. Monitor Applications
+To monitor applications in real-time:
+
+bash
+pm2 monit
+
+
+9. Save Process List
+To save the current process list so that they will restart automatically after a reboot:
+
+bash
+pm2 save
+
+
+10. Startup Script (auto-start PM2 on system boot)
+To generate the appropriate startup script based on your OS, use:
+
+bash
+pm2 startup
+Then, follow the instructions provided in the output to ensure PM2 starts after a reboot.
+
+
+11. Viewing Logs
+To view logs for an application:
+
+bash
+pm2 logs app1
+# To view logs for all applications
+pm2 logs
+
+
+12. Update PM2
+To update PM2 to the latest version:
+
+bash
+npm install pm2@latest -g
+
+
+13. Export Process List to JSON
+To export the current process list:
+
+bash
+pm2 dump
