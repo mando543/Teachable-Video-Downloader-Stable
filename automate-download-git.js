@@ -77,8 +77,8 @@ const saveProgressFile = (progress) => {
             await page.setCookie(...cookies);
             console.log('Cookies loaded successfully!');
         } else {
-            await page.goto('https://myarkview.org/sign_in');
-            await page.type('#email', 'kazimuhammadali11@gmail.com');
+            await page.goto('[type the link for your Teachable Admin Login]');
+            await page.type('#email', '[type email here for login]');
             await page.click('#otp-login-btn');
             console.log('Please enter OTP manually...');
             await page.waitForNavigation({ waitUntil: 'networkidle0' });
@@ -90,7 +90,7 @@ const saveProgressFile = (progress) => {
 
         // Navigate to the course page
         console.log('Navigating to the course page...');
-        await page.goto('https://myarkview.org/admin-app/courses/317234/curriculum/lessons/4873163', {
+        await page.goto('[type the link for the course page]', {
             waitUntil: 'networkidle0',
         });
 
