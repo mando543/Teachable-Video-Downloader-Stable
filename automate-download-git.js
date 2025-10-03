@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Custom download path
-const customDownloadPath = path.resolve(__dirname, 'downloads');
+const customDownloadPath = path.resolve(__dirname, '[type directory name]');
 fs.mkdirSync(customDownloadPath, { recursive: true }); // Ensure the directory exists
 
 // Path to the progress file
@@ -17,7 +17,8 @@ const progressFilePath = path.resolve(__dirname, 'progress.json');
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // Helper function to rename downloaded file
-const renameDownloadedFile = async (lessonTitle) => {
+const renameDownloadedFile = async (lessonTitle) => 
+    {
     console.log('Renaming downloaded file...');
     try {
         const files = fs.readdirSync(customDownloadPath);
@@ -25,7 +26,8 @@ const renameDownloadedFile = async (lessonTitle) => {
             .map(file => ({ file, time: fs.statSync(path.join(customDownloadPath, file)).mtime }))
             .sort((a, b) => b.time - a.time)[0]; // Find the latest file
 
-        if (!mostRecentFile) {
+        if (!mostRecentFile) 
+        {
             console.error('No file found in the download directory.');
             return;
         }
@@ -36,28 +38,35 @@ const renameDownloadedFile = async (lessonTitle) => {
 
         fs.renameSync(oldFilePath, newFilePath);
         console.log(`File renamed to: ${newFilePath}`);
-    } catch (error) {
+    } catch (error) 
+    {
         console.error('Error renaming file:', error.message);
     }
 };
 
 // Load progress file
-const loadProgressFile = () => {
-    if (fs.existsSync(progressFilePath)) {
+const loadProgressFile = () => 
+    {
+    if (fs.existsSync(progressFilePath)) 
+    {
         return JSON.parse(fs.readFileSync(progressFilePath));
-    } else {
+    } else 
+    {
         return [];
     }
 };
 
 // Save progress to file
-const saveProgressFile = (progress) => {
+const saveProgressFile = (progress) => 
+    {
     fs.writeFileSync(progressFilePath, JSON.stringify(progress, null, 2));
 };
 
 // Puppeteer setup
-(async () => {
-    const browser = await puppeteer.launch({
+(async () => 
+    {
+    const browser = await puppeteer.launch(
+        {
         headless: false,
         args: ['--no-sandbox']
     });
@@ -65,18 +74,22 @@ const saveProgressFile = (progress) => {
 
     // Configure download behavior
     const client = await page.target().createCDPSession();
-    await client.send('Page.setDownloadBehavior', {
+    await client.send('Page.setDownloadBehavior', 
+    {
         behavior: 'allow',
         downloadPath: customDownloadPath
     });
 
-    try {
+    try 
+    {
         const cookiesPath = path.resolve(__dirname, 'cookies.json');
-        if (fs.existsSync(cookiesPath)) {
+        if (fs.existsSync(cookiesPath)) 
+        {
             const cookies = JSON.parse(fs.readFileSync(cookiesPath));
             await page.setCookie(...cookies);
             console.log('Cookies loaded successfully!');
-        } else {
+        } else 
+        {
             await page.goto('[type the link for your Teachable Admin Login]');
             await page.type('#email', '[type email here for login]');
             await page.click('#otp-login-btn');
@@ -90,7 +103,8 @@ const saveProgressFile = (progress) => {
 
         // Navigate to the course page
         console.log('Navigating to the course page...');
-        await page.goto('[type the link for the course page]', {
+        await page.goto('[type the link for the course page]', 
+                        {
             waitUntil: 'networkidle0',
         });
 
@@ -109,7 +123,8 @@ const saveProgressFile = (progress) => {
         console.log(`Missing lessons: ${missingLessons.join(', ')}`);
 
         // Process missing lessons
-        for (const lessonTitle of missingLessons) {
+        for (const lessonTitle of missingLessons) 
+        {
             const index = lessonTitles.indexOf(lessonTitle);
             if (index === -1) {
                 console.error(`Lesson "${lessonTitle}" not found in the list.`);
@@ -127,19 +142,23 @@ const saveProgressFile = (progress) => {
             progress.push(lessonTitle);
             saveProgressFile(progress);
         }
-    } catch (error) {
+    } catch (error) 
+    {
         console.error('An error occurred:', error.message);
-    } finally {
+    } finally 
+    {
         console.log('Closing browser...');
         await browser.close();
     }
 
     // Function to handle downloading
-    async function downloadLesson(lessonTitle) {
+    async function downloadLesson(lessonTitle) 
+    {
         const actionMenuSelector = 'button[aria-label="Action menu"]';
         const downloadLinkSelector = 'a[aria-label^="Download file"]';
 
-        try {
+        try 
+        {
             console.log('Waiting for the action menu to load...');
             await page.waitForSelector(actionMenuSelector, { timeout: 10000 });
 
@@ -153,7 +172,8 @@ const saveProgressFile = (progress) => {
                 await page.waitForSelector(downloadLinkSelector, { timeout: 5000 });
                 const downloadLink = await page.$(downloadLinkSelector);
 
-                if (downloadLink) {
+                if (downloadLink) 
+                {
                     console.log('Clicking the download link...');
                     await downloadLink.click();
                     console.log('Download initiated.');
@@ -161,13 +181,16 @@ const saveProgressFile = (progress) => {
                     // Wait for download and rename
                     await delay(60000); // Wait for download to complete
                     await renameDownloadedFile(lessonTitle);
-                } else {
+                } else 
+                {
                     console.error('Download link not found.');
                 }
-            } else {
+            } else 
+            {
                 console.error('Not enough Action menu buttons found.');
             }
-        } catch (error) {
+        } catch (error) 
+        {
             console.error('Error during download process:', error.message);
         }
     }
